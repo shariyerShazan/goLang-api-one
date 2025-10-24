@@ -28,6 +28,11 @@ func main() {
 		return c.SendString("API path: " + c.Params("*"))
 	} )
 
-	
+
+	// statuc
+	app.Static("/" , "./public" ) // app.Static("api path" , "folder path" )
+	// and it's return the html file of that folder path
+
     log.Fatal(app.Listen(":3000"))
+	// app.Listen(":3000")
 }
