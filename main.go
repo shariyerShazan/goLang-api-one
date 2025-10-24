@@ -32,7 +32,7 @@ func main() {
 	// params get
     app.Get("user/:userId?" , func (c *fiber.Ctx) error {
           if c.Params("userId") != "" {
-            return c.SendString("User is is = " + c.Params("userId"))
+            return c.SendString("User ID is = " + c.Params("userId"))
           } else {
 			return c.Status(fiber.StatusBadRequest).SendString("User ID is missing")
 		  }
@@ -66,7 +66,7 @@ func main() {
 		// get by id
 		router.Get("/:studentId" , func (c *fiber.Ctx) error {
 			if c.Params("studentId") != "" {
-				return c.SendString("Here is stident id: " + c.Params("studentId"))
+				return c.SendString("Here is student id: " + c.Params("studentId"))
 			} else {
 				return c.Status(fiber.ErrNotFound.Code).SendString("studentId not found")
 			}
@@ -93,13 +93,16 @@ func main() {
 
 
 	// Wrong api to shutDown 
-	app.Get("/shutdown" , func (c *fiber.Ctx) error {
-		if c.IP() == "127.0.0.1" {
-			return c.SendString("Correct Ip adress connected!")
-		} else {
-			return app.Shutdown()
+	app.Get("/shutdown", func(c *fiber.Ctx) error {
+		if c.IP() != "127.0.0.1" {
+			return c.Status(fiber.StatusForbidden).SendString("Access denied!")
 		}
+		go func() {
+			_ = app.Shutdown()
+		}()
+		return c.SendString("Server shutting down...")
 	})
+	
 
 
     log.Fatal(app.Listen(":3000"))
