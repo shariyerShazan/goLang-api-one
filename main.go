@@ -50,6 +50,48 @@ func main() {
 
 
 
+	// goFiber Route 
+	app.Route("/students" , func(router fiber.Router) {
+
+		// get all
+		router.Get("/" , func (c *fiber.Ctx) error {
+			return c.SendString("All students here")
+		})
+
+		// post
+		router.Post("/" , func (c *fiber.Ctx) error {
+			return c.SendString("Student data posted")
+		} )
+
+		// get by id
+		router.Get("/:studentId" , func (c *fiber.Ctx) error {
+			if c.Params("studentId") != "" {
+				return c.SendString("Here is stident id: " + c.Params("studentId"))
+			} else {
+				return c.Status(fiber.ErrNotFound.Code).SendString("studentId not found")
+			}
+		} )
+
+		// patch
+		router.Patch("/:studentId" , func (c *fiber.Ctx) error {
+			if c.Params("studentId") != "" {
+				return c.SendString("Updated student data of StudentId no: " + c.Params("studentId"))
+			} else {
+				return c.Status(fiber.ErrNotFound.Code).SendString("studentId not found")
+			}
+		})
+
+		// delete 
+		router.Delete("/:studentId" , func (c *fiber.Ctx) error {
+			if c.Params("studentId") != "" {
+				return c.SendString("Deleted student data of StudentId no: " + c.Params("studentId"))
+			} else {
+				return c.Status(fiber.ErrNotFound.Code).SendString("studentId not found")
+			}
+		})
+	})
+
+
     log.Fatal(app.Listen(":3000"))
 	// app.Listen(":3000")
 }
