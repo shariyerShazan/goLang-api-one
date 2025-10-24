@@ -92,6 +92,16 @@ func main() {
 	})
 
 
+	// Wrong api to shutDown 
+	app.Get("/shutdown" , func (c *fiber.Ctx) error {
+		if c.IP() == "127.0.0.1" {
+			return c.SendString("Correct Ip adress connected!")
+		} else {
+			return app.Shutdown()
+		}
+	})
+
+
     log.Fatal(app.Listen(":3000"))
 	// app.Listen(":3000")
 }
