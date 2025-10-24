@@ -9,6 +9,12 @@ import (
 )
 
 func main() {
+	app := InitApp()
+	log.Fatal(app.Listen(":3000"))
+}
+
+
+func InitApp() *fiber.App {
     app := fiber.New()
 
 	// server main path get
@@ -104,7 +110,16 @@ func main() {
 	})
 	
 
+	// token 
+	app.Get("/check-token" , func (c *fiber.Ctx) error {
+		token := c.Get("Authorization")
+		if token == "" {
+			return c.SendStatus(fiber.StatusUnauthorized) //! OK
+			// return c.SendStatus(fiber.StatusBadGateway) //! FAIL
+		} else {
+			return c.SendStatus(fiber.StatusOK)
+		}
+	})
 
-    log.Fatal(app.Listen(":3000"))
-	// app.Listen(":3000")
+	return app
 }
